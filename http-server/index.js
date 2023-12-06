@@ -1,41 +1,46 @@
-const express = require('express');
-const path = require('path');
+const http = require('http');
 const fs = require('fs');
+const path = require('path');
+const url = require('url');
 
-const app = express();
-const port = process.env.PORT || 3000;
+const server = http.createServer((req, res) => {
+  const parsedUrl = url.parse(req.url, true);
+  const pathname = parsedUrl.pathname;
 
-// Serve static files from the "http-server" directory
-app.use(express.static(path.join(__dirname)));
-
-// Define routes
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'home.html'));
-});
-
-app.get('/home', (req, res) => {
-  res.sendFile(path.join(__dirname, 'home.html'));
-});
-
-app.get('/project', (req, res) => {
-  res.sendFile(path.join(__dirname, 'project.html'));
-});
-
-app.get('/registration', (req, res) => {
-  res.sendFile(path.join(__dirname, 'registration.html'));
-});
-
-// Update the route to point to the correct file or create the missing file
-app.get('/projects.html', (req, res) => {
-  const projectsFilePath = path.join(__dirname, 'project.html');
-  if (fs.existsSync(projectsFilePath)) {
-    res.sendFile(projectsFilePath);
-  } else {
-    res.status(404).send('Projects.html not found');
+  // Handle home page
+  if (pathname === '/' || pathname === '/home') {
+    serveFile(res, 'home.html');
+  }
+  // Handle project page
+  else if (pathname === '/project') {
+    serveFile(res, 'project.html');
+  }
+  // Handle registration page
+  else if (pathname === '/registration') {
+    serveFile(res, 'registration.html');
+  }
+  // Handle other pages or files
+  else {
+    serveFile(res, pathname.substr(1)); // Remove leading slash
   }
 });
 
-// Start the server
-app.listen(port, () => {
+function serveFile(res, filename) {
+  const filePath = path.join('.', filename);
+
+  fs.readFile(filePath, (err, data) => {
+    if (err) {
+      res.writeHead(404, { 'Content-Type': 'text/plain' });
+      res.end('File not found');
+    } else {
+      res.writeHead(200, { 'Content-Type': 'text/html' });
+      res.end(data);
+    }
+  });
+}
+
+const port = process.env.PORT || 3000;
+
+server.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
