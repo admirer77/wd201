@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>REGISTRATION FORM</title>
+    <link rel="stylesheet" href="index.css" />
+  </head>
+  <body>
+
+    <ul>
+      <li><a href="/home">Home</a></li>
+      <li><a href="/project">Projects</a></li>
+      
+  </ul>
+    <h1 align="center">Registration Form </h1>
+    <form id="registration_form">
+      <label for="name" >Name:</label>
+      <input type="text" id="name" name="name" required placeholder="Enter your name"/>
+      <label for="email" >Email:</label>
+      <input type="email" id="email" name="email" required placeholder="Enter Valid email" />
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" required placeholder="Enter Password" />
+      <label for="dob">Date of birth:</label>
+      <input type="date" id="dob" name="dob" required placeholder="Enter DOB"/>
+      <label for="terms">
+        <input type="checkbox" id="terms" name="terms" />
+        Accept terms and conditions:
+      </label>
+      <button type="submit">Submit</button>
+    </form>
+    <table id="user-table">
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Password</th>
+        <th>Dob</th>
+        <th>Accepted terms?</th>
+      </tr>
+    </table>
+    
+  </body>
+</html>
