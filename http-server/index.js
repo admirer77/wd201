@@ -2,6 +2,11 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const url = require('url');
+const minimist = require('minimist');
+
+// Parse command line arguments
+const args = minimist(process.argv.slice(2));
+const port = args.port || process.env.PORT || 3000;
 
 const server = http.createServer((req, res) => {
   const parsedUrl = url.parse(req.url, true);
@@ -38,8 +43,6 @@ function serveFile(res, filename) {
     }
   });
 }
-
-const port = process.env.PORT || 3000;
 
 server.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
