@@ -30,7 +30,7 @@ const todoList = () => {
       for (const item of list) {
         output += `[${item.completed ? 'x' : ' '}] ${item.title}`;
         if (item.dueDate !== today) {
-          output += ` (${formattedDate(new Date(item.dueDate))})`;
+          output += ` ${formattedDate(new Date(item.dueDate))}`;
         }
         output += '\n';
       }
