@@ -1,33 +1,44 @@
-const todoList = require('../todo');
+// __tests__/todo.js
 
-const {all, markAsComplete, add } = todoList();
+const Todo = require('../todo');
 
-describe("Todolist Test Suite", () => {
-    beforeAll(() => {
-        add(
-            {
-                title: "new todo",
-                completed: false,
-                dueDate: new Date().toLocaleDateString("en-CA")
-            }
-         );
-    })
+test('Creating a new todo', () => {
+  const todoList = new Todo();
+  todoList.createNewTodo('Test Todo', '2023-12-31');
+  expect(todoList.todos.length).toBe(1);
+});
 
-    test("Should add new todo", () => {
-         const todoItemsCount = all.length;
-         add(
-            {
-                title: "Test todo",
-                completed: false,
-                dueDate: new Date().toLocaleDateString("en-CA")
-            }
-         );
-         expect(all.length).toBe(todoItemsCount + 1);
-    });
+test('Marking a todo as completed', () => {
+  const todoList = new Todo();
+  todoList.createNewTodo('Test Todo', '2023-12-31');
+  todoList.markTodoAsCompleted(0);
+  expect(todoList.todos[0].completed).toBe(true);
+});
 
-    test("Should mark a todo as complete", () => {
-        expect(all[0].completed).toBe(false);
-        markAsComplete(0);
-        expect(all[0].completed).toBe(true);
-    })
-})
+test('Retrieval of overdue items', () => {
+  const todoList = new Todo();
+  todoList.createNewTodo('Overdue Todo', '2022-01-01');
+  const overdueItems = todoList.getOverdueItems();
+  expect(overdueItems.length).toBe(1);
+});
+
+test('Retrieval of due today items', () => {
+  const todoList = new Todo();
+  todoList.createNewTodo('Due Today Todo', '2023-12-17');
+  const dueTodayItems = todoList.getDueTodayItems();
+  expect(dueTodayItems.length).toBe(1);
+});
+
+test('Retrieval of due later items', () => {
+  const todoList = new Todo();
+  todoList.createNewTodo('Due Later Todo', '2023-12-31');
+  const dueLaterItems = todoList.getDueLaterItems();
+  expect(dueLaterItems.length).toBe(1);
+});
+
+test('toDisplayableList function', () => {
+  const todoList = new Todo();
+  todoList.createNewTodo('Test Todo', '2023-12-31');
+  const displayableList = todoList.toDisplayableList();
+  expect(displayableList.length).toBe(1);
+});
