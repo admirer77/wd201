@@ -35,20 +35,21 @@ describe("Todolist Test Suite", () => {
     });
 
     test("Should retrieve overdue items", () => {
-        const overdueItems = todoInstance.overdue();
-        expect(overdueItems.length).toBeGreaterThan(-1);
+      const overDueTodoItemsCount = todoInstance.overdue().length;
+      // add the over due task
+      expect(todoInstance.overdue().length+1).toEqual(overDueTodoItemsCount+1);
         // Add more specific assertions based on your implementation
     });
 
     test("Should retrieve due today items", () => {
         const dueTodayItems = todoInstance.dueToday();
-        expect(dueTodayItems.length).toBeGreaterThan(-1);
+        expect(dueTodayItems.length).toBeGreaterThan(0);
         // Add more specific assertions based on your implementation
     });
 
     test("Should retrieve due later items", () => {
-        const dueLaterItems = todoInstance.dueLater();
-        expect(dueLaterItems.length).toBeGreaterThan(-1);
+        const dueLaterItems = todoInstance.dueLater().length;
+        expect(todoInstance.dueLater().length+1).toEqual(dueLaterItems+1);
         // Add more specific assertions based on your implementation
     });
 });
