@@ -1,3 +1,5 @@
+const today = new Date().toISOString().split('T')[0];
+
 const todoList = () => {
     const all = [];
   
@@ -18,7 +20,7 @@ const todoList = () => {
     };
   
     const dueLater = () => {
-      return all.filter((item) => new Date(item.dueDate) > new Date(today));
+      return all.filter((item) => new Date(item.dueDate) > new Date( today));
     };
   
     const toDisplayableList = (list) => {
