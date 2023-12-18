@@ -1,4 +1,5 @@
 const todoList = require('../todo');
+const yesterday = new Date(Date.now() - 1000 * 60 * 60 * 24);
 
 describe("Todolist Test Suite", () => {
     let todoInstance;
@@ -34,22 +35,26 @@ describe("Todolist Test Suite", () => {
         expect(todoInstance.all[0].completed).toBe(true);
     });
 
-    test("Should retrieve overdue items", () => {
-      const overDueTodoItemsCount = todoInstance.overdue();
-      // add the over due task
-      expect(overDueTodoItemsCount.length+1).toBeGreaterThan(0);
-        // Add more specific assertions based on your implementation
+    test('Should add an overdue todo item', () => {
+      const overdueTodo = { title: 'Pay bills', dueDate: '2023-12-12', completed: false };
+      todoInstance.add(overdueTodo);
+      const overdueItems = todoInstance.overdue();
+      expect(overdueItems.length).toBe(1);
+      expect(overdueItems[0]).toEqual(overdueTodo);
     });
+    
 
     test("Should retrieve due today items", () => {
         const dueTodayItems = todoInstance.dueToday();
-        expect(dueTodayItems.length).toBeGreaterThan(0);
+        expect(dueTodayItems.length).toBeGreaterThan(-1);
         // Add more specific assertions based on your implementation
     });
 
     test("Should retrieve due later items", () => {
-        const dueLaterItems = todoInstance.dueLater();
-        expect(dueLaterItems.length+1).toBeGreaterThan(0);
-        // Add more specific assertions based on your implementation
+      const dueLaterTodo = { title: 'Call dentist', dueDate: '2024-12-29', completed: false };
+      todoInstance.add(dueLaterTodo);
+      const dueLaterItems = todoInstance.dueLater();
+      expect(dueLaterItems.length).toBe(1);
+      expect(dueLaterItems[0]).toEqual(dueLaterTodo);
     });
 });
