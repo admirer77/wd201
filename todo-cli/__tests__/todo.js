@@ -46,7 +46,7 @@ describe("Todolist Test Suite", () => {
 
     test("Should retrieve due today items", () => {
         const dueTodayItems = todoInstance.dueToday();
-        expect(dueTodayItems.length).toBeGreaterThan(-1);
+        expect(dueTodayItems.length).toBeGreaterThan(0);
         // Add more specific assertions based on your implementation
     });
 
