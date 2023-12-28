@@ -68,7 +68,7 @@ describe("Todo test suite", () => {
         expect(parsedResponse[3]["title"]).toBe("Buy ps3");
     });
     
-    test("Deletes a todo with the given ID if it exists and sends a boolean respons", async () => {
+    test("Deletes a todo with the given ID if it exists and sends a boolean response", async () => {
         const createResponse = await agent.post("/todos").send({
             title: "To be deleted",
             dueDate: new Date().toISOString(),
