@@ -50,10 +50,9 @@ app.delete("/todos/:id", async (request, response) => {
         if (!todo) {
             return response.status(404).json({ success: false, error: "Todo not found" });
         }
-
-        const result = await todo.destroy();
-
-        return response.json({ success: result ? true : false });
+        else{
+            return response.json({ success: await todo.destroy() ? true : false });
+        }
         
     } catch (error) {
         console.error("Error deleting todo:", error);
