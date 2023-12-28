@@ -48,7 +48,7 @@ app.delete("/todos/:id", async (request, response) => {
         const todo = await Todo.findByPk(todoId);
 
         if (!todo) {
-            return response.json({ success: false });
+            return response.status(404).json({ success: false, error: "Todo not found" });
         }
 
         await todo.destroy();
@@ -58,7 +58,6 @@ app.delete("/todos/:id", async (request, response) => {
         console.error("Error deleting todo:", error);
         return response.status(500).json({ success: false, error: "Internal Server Error" });
     }
-
-}) 
+})
 
 module.exports = app;
