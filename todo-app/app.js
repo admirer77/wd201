@@ -41,14 +41,12 @@ app.put("/todos/:id/markAsCompleted", async (request, response) => {
 
 app.delete("/todos/:id", async (request, response) => {
     console.log("Delete a todo by ID:", request.params.id)
-
     const todoId = request.params.id;
-
+    const todo = await Todo.findByPk(todoId);
     try {
-        const todo = await Todo.findByPk(todoId);
 
         if (!todo) {
-            return response.status(404).json({ success: false, error: "Todo not found" });
+            return response.status(404).json({ success: false });
         }
         else{
             return response.json({ success: await todo.destroy() ? true : false });
