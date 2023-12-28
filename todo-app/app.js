@@ -46,7 +46,7 @@ app.delete("/todos/:id", async (request, response) => {
     try {
 
         if (!todo) {
-            return response.status(404).json({ success: false });
+            return response.status(404).send( false );
         }
         else{
             return response.send( await todo.destroy() ? true : false );
