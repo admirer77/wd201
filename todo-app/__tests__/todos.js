@@ -79,7 +79,7 @@ describe("Todo test suite", () => {
         const deleteResponse = await agent.delete(`/todos/${createdTodoId}`);
     
         expect(deleteResponse.status).toBe(200);
-        expect(deleteResponse.body.success).toBe(true);
+        expect(deleteResponse.body).toBe(true);
     
         const fetchAfterDeleteResponse = await agent.get(`/todos/${createdTodoId}`);
         expect(fetchAfterDeleteResponse.status).toBe(404);
