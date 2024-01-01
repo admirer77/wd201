@@ -24,6 +24,30 @@ module.exports = (sequelize, DataTypes) => {
     markAsCompleted() {
       return this.update({ completed : true})
     }
+    static isOverdue(dueDate) {
+      const currentDate = new Date();
+      return this.dueDate < currentDate && !this.completed;
+    }
+    static isDueToday(dueDate) {
+      const currentDate = new Date();
+      
+      // Check if dueDate is defined
+      if (!this.dueDate) {
+        return false;
+      }
+  
+      const dueDate1 = new Date(this.dueDate);
+      return (
+        dueDate1.getDate() === currentDate.getDate() &&
+        dueDate1.getMonth() === currentDate.getMonth() &&
+        dueDate1.getFullYear() === currentDate.getFullYear() &&
+        !this.completed
+      );
+    }
+    static isDueLater(dueDate) {
+      const currentDate = new Date();
+      return this.dueDate > currentDate && !this.completed;
+    } 
   }
   Todo.init({
     title: DataTypes.STRING,

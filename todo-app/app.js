@@ -9,16 +9,32 @@ app.use(bodyParser.json());
 app.set("view engine", "ejs");
 
 app.get("/", async (request, response) => {
+  try {
     const allTodos = await Todo.getTodos();
+    
+    const overdueTodos = await  Todo.isOverdue();
+    const dueTodayTodos = await Todo.isDueToday();
+    const dueLaterTodos = await Todo.isDueLater();
+    
     if( request.accepts("html")) {
         response.render('index', {
-            allTodos
+            allTodos,
+            overdueTodos,
+            dueTodayTodos,
+            dueLaterTodos
         });
     } else {
         response.json({
-            allTodos
+            allTodos,
+            overdueTodos,
+            dueTodayTodos,
+            dueLaterTodos
         })
-    }
+    } 
+  } catch (error) {
+      console.error("Error fetching todos:", error);
+      response.status(500).json({ error: "Internal Server Error" });
+  }
 });
 
 app.use(express.static(path.join(__dirname,'public')));
@@ -78,3 +94,4 @@ app.delete("/todos/:id", async (request, response) => {
 
 
 module.exports = app;
+
