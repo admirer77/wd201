@@ -14,21 +14,23 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static addTodo({ title, dueDate }) {
-      return this.create({ title: title, dueDate: dueDate, completed: false})
+      return this.create({ title: title, dueDate: dueDate, completed: false })
     }
 
     static getTodos() {
       return this.findAll();
     }
 
-    markAsCompleted() {
-      return this.update({ completed : true})
-    }
-    static isOverdue(dueDate) {
+    isOverdue() {
       const currentDate = new Date();
-      return this.dueDate < currentDate && !this.completed;
+      if (!this.dueDate) {
+        return false;
+      }
+      const dueDate1 = new Date(this.dueDate);
+      return dueDate1 < currentDate && !this.completed;
     }
-    static isDueToday(dueDate) {
+
+    isDueToday() {
       const currentDate = new Date();
       
       // Check if dueDate is defined
@@ -44,10 +46,19 @@ module.exports = (sequelize, DataTypes) => {
         !this.completed
       );
     }
-    static isDueLater(dueDate) {
+
+    isDueLater() {
       const currentDate = new Date();
-      return this.dueDate > currentDate && !this.completed;
-    } 
+      if (!this.dueDate) {
+        return false;
+      }
+      const dueDate1 = new Date(this.dueDate);
+      return dueDate1 > currentDate && !this.completed;
+    }
+
+    markAsCompleted() {
+      return this.update({ completed: true })
+    }
   }
   Todo.init({
     title: DataTypes.STRING,
