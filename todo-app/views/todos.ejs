@@ -1,9 +1,12 @@
-<h5>Overdue</h5>
+<div class="flex">
+    <h5 class="mr-2">Overdue</h5>
+    <p class="px-2 py-1 bg-gray-300 rounded text-sm"><%= overdueTodos.length %></p>
+</div>
+
 <ul class="list-none">
     <% for( var i = 0; i < overdueTodos.length; i++) { %>
     <li class="Todo-item">
         <div class="flex items-center w-fit my-2 px-2 py-1 hover:bg-purple-50 rounded">
-            <%= i %>
             <input id="todo-checkbox-<%= i %>" type="checkbox" class="w-4 h-4 test-blue-600 border-gray-300 ml-2">
             <label for="todo-checkbox-<%= i %>" class="ml-2 text-sm text-gray-600 cursor-pointer"><%= overdueTodos[i].title %></label>
             <a href="#" class="hidden trash-icon ml-2">
@@ -17,13 +20,15 @@
     <p><%= overdueTodos.length %></p>
 </ul>
 
+<div class="flex">
+    <h5 class="mr-2">Due Today</h5>
+    <p class="px-2 py-1 bg-gray-300 rounded text-sm"><%= dueTodayTodos.length %></p>
+</div>
 
-<h5>Due Today</h5>
 <ul class="list-none">
     <% for( var i = 0; i < dueTodayTodos.length; i++) { %>
     <li class="Todo-item">
         <div class="flex items-center w-fit my-2 px-2 py-1 hover:bg-purple-50 rounded">
-            <%= i %>
             <input id="todo-checkbox-<%= i %>" type="checkbox" class="w-4 h-4 test-blue-600 border-gray-300 ml-2">
             <label for="todo-checkbox-<%= i %>" class="ml-2 text-sm text-gray-600 cursor-pointer"><%= dueTodayTodos[i].title %></label>
             <a href="#" class="hidden trash-icon ml-2">
@@ -38,12 +43,16 @@
 </ul>
 
 
-<h5>Due Later</h5>
+<div class="flex">
+    <h5 class="mr-2">Due Later</h5>
+    <p class="px-2 py-1 bg-gray-300 rounded text-sm"><%= dueLaterTodos.length %></p>
+</div>
+
+
 <ul class="list-none">
     <% for( var i = 0; i < dueLaterTodos.length; i++) { %>
     <li class="Todo-item">
         <div class="flex items-center w-fit my-2 px-2 py-1 hover:bg-purple-50 rounded">
-            <%= i %>
             <input id="todo-checkbox-<%= i %>" type="checkbox" class="w-4 h-4 test-blue-600 border-gray-300 ml-2">
             <label for="todo-checkbox-<%= i %>" class="ml-2 text-sm text-gray-600 cursor-pointer"><%= dueLaterTodos[i].title %></label>
             <a href="#" class="hidden trash-icon ml-2">
@@ -54,6 +63,5 @@
         </div>
     </li>
     <% } %>
-    <p><%= dueLaterTodos.length %></p>
 </ul>
 
