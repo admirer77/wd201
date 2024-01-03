@@ -1,6 +1,7 @@
-<h5><%= title %></h5>
-<span id="<%= title %>-1" class="px-2 py-1 bg-gray-300 text-gray-900 text-sm font-small mr-2 px-2.5 py-0.5 rounded dark:bg-gray-300 justify-center items-center items" ><%= Due.length %></span>
-
+<div class="flex mb-2">
+    <h5><%= title %></h5>
+    <span id="<%= id %>" class="px-2 py-1 bg-gray-300 text-gray-900 text-sm font-small ml-2 px-2.5 py-0.5 rounded dark:bg-gray-300 justify-center items-center items" ><%= Due.length %></span>
+</div>
 
 <ul class="list-none">
     <% for( var i = 0; i < Due.length; i++) { %>
