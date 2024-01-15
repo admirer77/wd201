@@ -10,6 +10,9 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
+
+    
+
     static associate(models) {
       // define association here
     }
@@ -28,7 +31,7 @@ module.exports = (sequelize, DataTypes) => {
         return false;
       }
       const dueDate1 = new Date(this.dueDate);
-      return dueDate1 < currentDate && !this.completed;
+      return dueDate1 < currentDate ;
     }
 
     isDueToday() {
@@ -43,8 +46,7 @@ module.exports = (sequelize, DataTypes) => {
       return (
         dueDate1.getDate() === currentDate.getDate() &&
         dueDate1.getMonth() === currentDate.getMonth() &&
-        dueDate1.getFullYear() === currentDate.getFullYear() &&
-        !this.completed
+        dueDate1.getFullYear() === currentDate.getFullYear() 
       );
     }
 
@@ -54,7 +56,15 @@ module.exports = (sequelize, DataTypes) => {
         return false;
       }
       const dueDate1 = new Date(this.dueDate);
-      return dueDate1 > currentDate && !this.completed;
+      return dueDate1 > currentDate ;
+    }
+
+    static async remove(id) {
+      return this.destroy({
+        where: {
+          id,
+        },
+      });
     }
 
     markAsCompleted() {

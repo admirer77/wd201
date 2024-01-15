@@ -23,7 +23,7 @@ describe("Todolist Test Suite", () => {
         const todoItemsCount = todoInstance.all.length;
         todoInstance.add({
             title: "Test todo",
-            completed: false,
+            completed: false,;
             dueDate: new Date().toLocaleDateString("en-CA")
         });
         expect(todoInstance.all.length).toBe(todoItemsCount + 1);
@@ -47,7 +47,6 @@ describe("Todolist Test Suite", () => {
     test("Should retrieve due today items", () => {
         const dueTodayItems = todoInstance.dueToday();
         expect(dueTodayItems.length).toBeGreaterThan(0);
-        // Add more specific assertions based on your implementation
     });
 
     test("Should retrieve due later items", () => {

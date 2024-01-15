@@ -7,48 +7,56 @@ const path = require("path");
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: false}));
 
-app.set("view engine", "ejs");
+app.set('view engine', 'ejs');
 
-app.get("/", async (request, response) => {
+
+
+
+app.get('/', async (request, response) => {
   try {
     const allTodos = await Todo.getTodos();
-    
-    const overdueTodos = allTodos.filter(todo => todo.isOverdue());
-    const dueTodayTodos = allTodos.filter(todo => todo.isDueToday());
-    const dueLaterTodos = allTodos.filter(todo => todo.isDueLater());
-    
-    if (request.accepts("html")) {
+    const overdueTodos = allTodos.filter((todo) => todo.isOverdue());
+    const dueTodayTodos = allTodos.filter((todo) => todo.isDueToday());
+    const dueLaterTodos = allTodos.filter((todo) => todo.isDueLater());
+
+
+    if (request.accepts('html')) {
       response.render('index', {
+        title: "Todo application",
         allTodos,
         overdueTodos,
         dueTodayTodos,
-        dueLaterTodos
+        dueLaterTodos,
       });
     } else {
       response.json({
         allTodos,
         overdueTodos,
         dueTodayTodos,
-        dueLaterTodos
+        dueLaterTodos,
       });
-    } 
+    }
   } catch (error) {
-    console.error("Error fetching todos:", error);
-    response.status(500).json({ error: "Internal Server Error" });
+    console.error('Error fetching todos:', error);
+    response.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
 
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get("/todos", async (request, response) => {
   console.log("Todo list")
   try {
+    const completedTodos = await getCompletedTodos();
     const todos = await Todo.findAll();
-    response.json(todos);
+    response.json(todos,completedTodos);
+    
   } catch (error) {
     console.error("Error fetching todos:", error);
     response.status(500).json({ error: "Internal Server Error" });
   }
+  
 });
 
 app.post("/todos", async (request, response) => {
@@ -88,10 +96,15 @@ app.delete("/todos/:id", async (request, response) => {
     else {
       return response.send(await todo.destroy() ? true : false);
     }
+    await Todo.remove(request.params.id);
+    return response.json({ success: true });
   } catch (error) {
     console.error("Error deleting todo:", error);
     return response.status(500).json({ success: false, error: "Internal Server Error" });
   }
 })
+
+
+
 
 module.exports = app;
