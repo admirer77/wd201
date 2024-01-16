@@ -31,7 +31,7 @@ module.exports = (sequelize, DataTypes) => {
         return false;
       }
       const dueDate1 = new Date(this.dueDate);
-      return dueDate1 < currentDate ;
+      return dueDate1 < currentDate && !this.completed;
     }
 
     isDueToday() {
@@ -47,6 +47,7 @@ module.exports = (sequelize, DataTypes) => {
         dueDate1.getDate() === currentDate.getDate() &&
         dueDate1.getMonth() === currentDate.getMonth() &&
         dueDate1.getFullYear() === currentDate.getFullYear() 
+        && !this.completed
       );
     }
 
@@ -56,7 +57,7 @@ module.exports = (sequelize, DataTypes) => {
         return false;
       }
       const dueDate1 = new Date(this.dueDate);
-      return dueDate1 > currentDate ;
+      return dueDate1 > currentDate && !this.completed;
     }
 
     static async remove(id) {
@@ -66,10 +67,10 @@ module.exports = (sequelize, DataTypes) => {
         },
       });
     }
-
-    markAsCompleted() {
-      return this.update({ completed: true })
+    setCompletionStatus() {
+      return this.completed;
     }
+
   }
   Todo.init({
     title: DataTypes.STRING,
