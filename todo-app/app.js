@@ -89,11 +89,11 @@ app.put("/todos/:id/setCompletionStatus", async (request, response) => {
           return response.status(404).json({ error: "Todo not found" });
       }
 
-      // Toggle the completion status based on the request body
       todo.completed = request.body.completed;
       await todo.save();
 
       return response.json({ message: "Todo updated successfully" });
+      
   } catch (error) {
       console.error(error);
       return response.status(500).json({ error: "Internal Server Error" });
