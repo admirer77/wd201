@@ -23,7 +23,7 @@ app.get('/', async (request, response) => {
     const overdueTodos = allTodos.filter((todo) => todo.isOverdue());
     const dueTodayTodos = allTodos.filter((todo) => todo.isDueToday());
     const dueLaterTodos = allTodos.filter((todo) => todo.isDueLater());
-    const completedTodos = allTodos.filter((todo) => todo.setCompletionStatus());
+    const completedTodos = allTodos.filter((todo) => todo.isCompleted());
 
     if (request.accepts('html')) {
       response.render('index', {
