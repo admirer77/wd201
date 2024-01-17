@@ -64,6 +64,9 @@ describe("Todo test suite", () => {
 
         const parsedUpdateResponse = JSON.parse(markCompleteResponse.text);
         expect(parsedUpdateResponse.todo.completed).toBe(true);
+
+
+
     });
 
     test("deleting a to-do", async () => {

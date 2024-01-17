@@ -13,7 +13,9 @@
             .querySelector('meta[name="csrf-token"]')
             .getAttribute("content");
         function updateTodo(id) {
+            console.log(`Updating todo with ID ${id}`);
             const checkbox = document.getElementById(`todo-checkbox-${id}`);
+            console.log('Checkbox checked:', checkbox.checked);
             const isChecked = checkbox.checked;
 
             fetch(`/todos/${id}/setCompletionStatus`, {

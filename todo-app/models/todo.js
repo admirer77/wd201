@@ -67,8 +67,8 @@ module.exports = (sequelize, DataTypes) => {
         },
       });
     }
+
     async setCompletionStatus() {
-      await this.update({ completed: true });
       return this.completed;
     }
   
