@@ -24,7 +24,7 @@ describe("Todo test suite", () => {
         server.close();
     });
 
-    test("create a new todo", async () => {
+    test("creating a to-do", async () => {
         const res = await agent.get("/");
         const csrfToken = extractCsrfToken(res);
         const response = await agent.post('/todos').send({
@@ -37,7 +37,7 @@ describe("Todo test suite", () => {
     });
 
 
-    test("Mark a todo as complete", async () => {
+    test("Updating a to-do", async () => {
         let res = await agent.get("/");
         let csrfToken = extractCsrfToken(res);
         await agent.post('/todos').send({
@@ -57,13 +57,35 @@ describe("Todo test suite", () => {
         res = await agent.get("/");
         csrfToken = extractCsrfToken(res);
 
-        const markCompleteResponse = await agent.put(`/todos/${latestTodo.id}`).send({
+        const markCompleteResponse = await agent.put(`/todos/${latestTodo.id}/setCompletionStatus`).send({
             completed: true,
             _csrf: csrfToken,
         });
+
         const parsedUpdateResponse = JSON.parse(markCompleteResponse.text);
-        expect(parsedUpdateResponse.completed).toBe(true);
+        expect(parsedUpdateResponse.todo.completed).toBe(true);
     });
 
+    test("deleting a to-do", async () => {
+        const todo = await db.Todo.create({
+            title: 'Take out the trash',
+            dueDate: new Date().toISOString(),
+            completed: false
+        });
+
+        const res = await agent.get("/");
+        const csrfToken = extractCsrfToken(res);
+
+        const deleteResponse = await agent
+            .delete(`/todos/${todo.id}`)
+            .send({
+                "_csrf": csrfToken
+            });
+        
+        expect(deleteResponse.statusCode).toBe(200);
+
+        const getDeletedTodo = await agent.get(`/todos/${todo.id}`);
+        expect(getDeletedTodo.statusCode).toBe(404);
+    });
 });
 

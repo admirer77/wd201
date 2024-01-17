@@ -92,7 +92,8 @@ app.put("/todos/:id/setCompletionStatus", async (request, response) => {
       todo.completed = request.body.completed;
       await todo.save();
 
-      return response.json({ message: "Todo updated successfully" });
+      return response.json({ todo, message: "Todo updated successfully" });
+
       
   } catch (error) {
       console.error(error);
