@@ -90,5 +90,48 @@ describe("Todo test suite", () => {
         const getDeletedTodo = await agent.get(`/todos/${todo.id}`);
         expect(getDeletedTodo.statusCode).toBe(404);
     });
+    test("creating a sample due today item", async () => {
+        const res = await agent.get("/");
+        const csrfToken = extractCsrfToken(res);
+        const today = new Date();
+        const response = await agent.post('/todos').send({
+          title: 'Sample Due Today',
+          dueDate: today.toISOString(),
+          completed: false,
+          "_csrf": csrfToken
+        });
+        expect(response.statusCode).toBe(302);
+        // Add additional assertions if needed
+      });
+    
+      test("creating a sample due later item", async () => {
+        const res = await agent.get("/");
+        const csrfToken = extractCsrfToken(res);
+        const futureDate = new Date();
+        futureDate.setDate(futureDate.getDate() + 7);
+        const response = await agent.post('/todos').send({
+          title: 'Sample Due Later',
+          dueDate: futureDate.toISOString(),
+          completed: false,
+          "_csrf": csrfToken
+        });
+        expect(response.statusCode).toBe(302);
+        // Add additional assertions if needed
+      });
+    
+      test("creating a sample overdue item", async () => {
+        const res = await agent.get("/");
+        const csrfToken = extractCsrfToken(res);
+        const pastDate = new Date();
+        pastDate.setDate(pastDate.getDate() - 7);
+        const response = await agent.post('/todos').send({
+          title: 'Sample Overdue',
+          dueDate: pastDate.toISOString(),
+          completed: false,
+          "_csrf": csrfToken
+        });
+        expect(response.statusCode).toBe(302);
+        // Add additional assertions if needed
+      });
 });
 

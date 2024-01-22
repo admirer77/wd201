@@ -30,6 +30,9 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     isOverdue() {
+      const today = new Date();
+
+
       const currentDate = new Date();
       if (!this.dueDate) {
         return false;
