@@ -101,7 +101,6 @@ describe("Todo test suite", () => {
           "_csrf": csrfToken
         });
         expect(response.statusCode).toBe(302);
-        // Add additional assertions if needed
       });
     
       test("creating a sample due later item", async () => {
@@ -116,7 +115,6 @@ describe("Todo test suite", () => {
           "_csrf": csrfToken
         });
         expect(response.statusCode).toBe(302);
-        // Add additional assertions if needed
       });
     
       test("creating a sample overdue item", async () => {
@@ -131,7 +129,6 @@ describe("Todo test suite", () => {
           "_csrf": csrfToken
         });
         expect(response.statusCode).toBe(302);
-        // Add additional assertions if needed
       });
 });
 
