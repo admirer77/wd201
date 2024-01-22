@@ -18,8 +18,12 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static addTodo({ title, dueDate }) {
-      return this.create({ title: title, dueDate: dueDate, completed: false })
+      if (!dueDate) {
+        throw new Error("Due date is required.");
+      }
+      return this.create({ title: title, dueDate: dueDate, completed: false });
     }
+    
 
     static getTodos() {
       return this.findAll();
@@ -69,9 +73,10 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     async setCompletionStatus() {
-      await this.update({ completed: true});
+      await this.update({ completed: !this.completed });
       return this.completed;
     }
+    
   
     isCompleted() {
       return this.completed;
