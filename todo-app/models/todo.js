@@ -1,8 +1,7 @@
-'use strict';
-const { Model } = require('sequelize');
-const { Sequelize } = require("sequelize");
-const { Op } = Sequelize;
-
+/* eslint-disable no-undef */
+/* eslint-disable no-unused-vars */
+"use strict";
+const { Model, Op } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Todo extends Model {
     /**
@@ -10,88 +9,84 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-
-    
-
     static associate(models) {
       // define association here
     }
-
     static addTodo({ title, dueDate }) {
-      if (!dueDate) {
-        throw new Error("Due date is required.");
-      }
       return this.create({ title: title, dueDate: dueDate, completed: false });
     }
-    
-
-    static getTodos() {
+    static getTodo() {
       return this.findAll();
     }
 
-    isOverdue() {
-      const today = new Date();
-
-
-      const currentDate = new Date();
-      if (!this.dueDate) {
-        return false;
-      }
-      const dueDate1 = new Date(this.dueDate);
-      return dueDate1 < currentDate && !this.completed;
+    markAsCompleted() {
+      return this.update({ completed: true });
+    }
+    deleteTodo() {
+      return this.destroy();
+    }
+    setCompletionStatus(bool) {
+      return this.update({ completed: bool });
+    }
+    static overDue() {
+      return this.findAll({
+        where: {
+          dueDate: {
+            [Op.lt]: new Date().toLocaleDateString("en-CA"),
+          },
+          completed: false,
+        },
+        order: [["id", "ASC"]],
+      });
+    }
+    static dueToday() {
+      return this.findAll({
+        where: {
+          dueDate: {
+            [Op.eq]: new Date().toLocaleDateString("en-CA"),
+          },
+          completed: false,
+        },
+        order: [["id", "ASC"]],
+      });
+    }
+    static dueLater() {
+      return this.findAll({
+        where: {
+          dueDate: {
+            [Op.gt]: new Date().toLocaleDateString("en-CA"),
+          },
+          completed: false,
+        },
+        order: [["id", "ASC"]],
+      });
     }
 
-    isDueToday() {
-      const currentDate = new Date();
-      
-      // Check if dueDate is defined
-      if (!this.dueDate) {
-        return false;
-      }
-  
-      const dueDate1 = new Date(this.dueDate);
-      return (
-        dueDate1.getDate() === currentDate.getDate() &&
-        dueDate1.getMonth() === currentDate.getMonth() &&
-        dueDate1.getFullYear() === currentDate.getFullYear() 
-        && !this.completed
-      );
-    }
-
-    isDueLater() {
-      const currentDate = new Date();
-      if (!this.dueDate) {
-        return false;
-      }
-      const dueDate1 = new Date(this.dueDate);
-      return dueDate1 > currentDate && !this.completed;
+    static completeditems() {
+      return this.findAll({
+        where: {
+          completed: true,
+        },
+        order: [["id", "ASC"]],
+      });
     }
 
     static async remove(id) {
       return this.destroy({
-        where: {
-          id,
-        },
+        where: { id },
       });
     }
-
-    async setCompletionStatus() {
-      await this.update({ completed: !this.completed });
-      return this.completed;
-    }
-    
-  
-    isCompleted() {
-      return this.completed;
-    }
   }
-  Todo.init({
-    title: DataTypes.STRING,
-    dueDate: DataTypes.DATEONLY,
-    completed: DataTypes.BOOLEAN
-  }, {
-    sequelize,
-    modelName: 'Todo',
-  });
+  Todo.init(
+    {
+      title: DataTypes.STRING,
+      dueDate: DataTypes.DATEONLY,
+      completed: DataTypes.BOOLEAN,
+    },
+    {
+      sequelize,
+      modelName: "Todo",
+    },
+  );
   return Todo;
 };

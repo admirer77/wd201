@@ -3,87 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="<%= csrfToken %>" />
-    <title>My To-Do Application</title>
-    <link rel="stylesheet" href="./css/styles.css">
+    <meta name="csrf_token" content="<%= csrfToken %>">
+    <title>Todo List </title>
     <script src="https://cdn.tailwindcss.com"></script>
-
+    <link rel="stylesheet" href="/css/styles.css">
     <script>
         var token = document
-            .querySelector('meta[name="csrf-token"]')
-            .getAttribute("content");
-        function updateTodo(id) {
-            console.log(`Updating todo with ID ${id}`);
-            const checkbox = document.getElementById(`todo-checkbox-${id}`);
-            console.log('Checkbox checked:', checkbox.checked);
-            const isChecked = checkbox.checked;
-
-            fetch(`/todos/${id}/setCompletionStatus`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                },
+        .querySelector('meta[name="csrf_token"]')
+        .getAttribute("content");
+        function updateTodo(id){
+            let dec=document.querySelector(`#todo-checkbox-${id}`).checked
+            fetch(`/todos/${id}`,{
+                method:"put",
+                headers:{"Content-Type": "application/json"},
                 body: JSON.stringify({
-                    completed: isChecked,
-                    _csrf: token,
+                    _csrf:token,
+                    completed: dec
                 })
             })
-            .then((res) => {
-                if (res.ok) {
+            .then((res)=>{
+                if(res.ok){
                     window.location.reload();
-                } else {
-                    console.error(`Failed to update todo with ID ${id}`);
                 }
+                
             })
-            .catch((err) => console.error(err));
+            .catch((err)=>console.error(err));
         }
-
-
-        function deleteTodo(id) {
-            fetch(`/todos/${id}` , {
-                method: "delete",
-                headers: { "Content-Type": "application/json" },
+        function deleteTodo(id){
+            fetch(`/todos/${id}`,{
+                method:"delete",
+                headers:{"Content-Type": "application/json"},
                 body: JSON.stringify({
-                    "_csrf": token
+                    _csrf:token
                 })
             })
-                .then((res) => {
-                    if (res.ok) {
-                        window.location.reload();
-                    }
-                })
-                .catch((err) => console.error(err));
+            .then((res)=>{
+                if(res.ok){
+                    window.location.reload();
+                }
+                
+            })
+            .catch((err)=>console.error(err));
         }
+
     </script>
 </head>
 <body>
-    <div class="grid grid-cols-6">
-        <div class="col-start-3 col-span-2">
-            <%- include('header.ejs') %>
-            <form action="/todos" method="post">
-                <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
-                <div class="flex gap-2 py-4">
-                    <div class="flex-auto">
-                        <input type="text" name="title" placeholder="What's next?" class="border border-gray-300 text-gray-900 w-full rounded p-2 text-sm" required/>
-                    </div>
-                    <div class="flex-auto">
-                        <input type="date" name="dueDate" class="border border-gray-300 text-gray-900 w-full rounded p-2 text-sm leading-4" required/>
-                    </div>
-                    <div class="flex-none">
-                        <button type="submit" class="bg-green-600 text-white px-5 py-1.5 rounded font-medium mr-2 mb-2">Add</button>
-                    </div>
+<div class="grid grid-cols-6">
+    <div class="col-start-3 col-span-2">
+        <!--Header Start-->
+        <%- include("header.ejs") %>
+        <!--Header End-->
+        <form action="/todos" method="post">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+            <div class="flex gap-2 py-4">
+                <div class="flex-auto">
+                    <input type="text" name="title" placeholder="What's next?" class="border border-gray-300 text-gray-900 w-full rounded p-2 text-sm" required/>
                 </div>
-            </form>
-            <div>
-                <%- include('todos.ejs', { title: "Overdue" , Due: overdueTodos, id: "count-overdue" }) %>
-                <%- include('todos.ejs', { title: "Due Today" , Due: dueTodayTodos, id: "count-due-today" }) %>
-                <%- include('todos.ejs', { title: "Due Later", Due: dueLaterTodos, id: "count-due-later" }) %>
-                <%- include('todos.ejs', { title: "Completed Items", Due: completedTodos, id: "count-completed" }) %>
+                <div class="flex-auto">
+                    <input type="date" name="dueDate" class="border border-gray-300 text-gray-900 w-full rounded p-2 text-sm leading-4" required/>
+                </div>
+                <div class="flex-none">
+                    <button type="submit" class="bg-green-600 text-white px-5 py-1.5 rounded font-medium mr-2 mb-2">Add</button>
+                </div>
             </div>
-            <%- include('footer.ejs') %>
+        </form>
+        <div>
+            <!--Todo Start-->
+            <%- include("todos.ejs",{title:"Overdue", Due:overDue , id:"count-overdue"}) %>
+            <%- include("todos.ejs",{title:"Due Today", Due:dueToday, id:"count-due-today"}) %>
+            <%- include("todos.ejs",{title:"Due Later", Due:dueLater, id:"count-due-later"}) %>
+            <%- include("todos.ejs",{title:"Completed Items", Due:completeditems,id:"count-completed"}) %>
+            <!--Todo End-->
         </div>
+        <!--Footer Start-->
+        <%- include("footer.ejs") %>
+        <!--Footer End-->
     </div>
+</div>
 </body>
 </html>
-
-
