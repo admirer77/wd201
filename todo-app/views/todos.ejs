@@ -58,6 +58,17 @@
         <%- include("header.ejs") %>
         <!--Header End-->
         <button class="bg-green-600 text-white px-5 py-1.5 rounded font-medium mr-2 mb-2"><a href="/signout">Sign out</a></button>
+
+        <div>
+            <% if(messages && messages.error && messages.error.length > 0)  { %>
+                <% for(var i=0; i<messages.error.length; i++) { %>
+                        <li style="list-style-type: none; color: red;" > 
+                            <%= messages.error[i] %>
+                        </li>
+                <% } %>
+            <% } %>
+        </div>
+
         <form action="/todos" method="post">
             <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
             <div class="flex gap-2 py-4">
