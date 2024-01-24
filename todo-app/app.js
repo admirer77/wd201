@@ -183,12 +183,14 @@ app.post(
   }
 );
 
-app.get("/signout", (request, response) => {
-  request.logout((err) => {
-    if (err) {return next(err);}
+app.get("/signout",(request,response, next) => {
+  request.logout((err)=>{ 
+    if (err){ 
+      return next(err);
+    }
     response.redirect("/");
   })
-})
+});
 
 app.get("/todos", async function (request, response) {
   console.log("creating a todo", request.body);
