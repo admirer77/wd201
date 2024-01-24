@@ -92,6 +92,9 @@ app.get("/", async (request, response) => {
     title: "Todo application",
     csrfToken: request.csrfToken(),
   });
+  if (request.user) {
+    return response.redirect("/todos");
+  };
 });
 
 app.use(function(request, response, next) {
