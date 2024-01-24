@@ -92,9 +92,7 @@ app.get("/", async (request, response) => {
     title: "Todo application",
     csrfToken: request.csrfToken(),
   });
-  if (request.user) {
-    return response.redirect("/todos");
-  };
+  
 });
 
 app.use(function(request, response, next) {
@@ -172,6 +170,9 @@ app.post("/users", async (request, response) => {
 
 app.get("/login", (request, response) => {
   response.render("login", { title: "Login", csrfToken: request.csrfToken()});
+  if (request.user) {
+    return response.redirect("/todos");
+  };
 })
 
 app.post(
