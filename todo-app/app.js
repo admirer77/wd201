@@ -44,6 +44,27 @@ app.get("/", async (req, res) => {
   }
 });
 
+app.get("/signup", (request, response) => {
+  response.render("signup", { title: "Signup" , csrfToken: request.csrfToken()})
+})
+
+app.post("/users",async (request, response) => {
+  console.log("Firstname", request.body.firstName)
+
+  try{
+    const user = await User.create({
+      firstName: request.body.firstName,
+      lastName: request.body.lastName,
+      email: request.body.email,
+      password: request.body.password
+    });
+    response.redirect("/");
+  } catch(error) {
+    console.log(error);
+  }
+  
+})
+
 app.get("/todos", async function (_request, response) {
   console.log("Processing list of all Todos ...");
   try {
