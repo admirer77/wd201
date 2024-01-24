@@ -17,7 +17,11 @@
             <!--Header Start-->
             <%- include("header.ejs") %>
             <!--Header End-->
-            <h6 class="py-4">Signup as a new user</h6>
+            <h6 class="py-4">Signu In</h6>
+            <div>
+            
+            <%- include("notifications.ejs") %>
+
             <form action="/session" method="post">
                 <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                 
@@ -34,6 +38,9 @@
                 </div>
                
             </form>
+
+            
+            
         </div>
     </div>
 </body>

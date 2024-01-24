@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-undef */
 const express = require("express");
+
 var csrf = require("tiny-csrf");
 const app = express();
 const { Todo, User } = require("./models");
@@ -10,6 +11,7 @@ const cookieParser = require("cookie-parser");
 const passport = require('passport');
 const connectEnsureLogin = require('connect-ensure-login');
 const session = require('express-session');
+const flash = require("connect-flash");
 const LocalStrategy = require('passport-local');
 
 const bcrypt = require('bcrypt');
@@ -25,6 +27,8 @@ app.use(cookieParser("ssh! some secret string"));
 app.use(csrf("this_should_be_32_character_long", ["POST", "PUT", "DELETE"]));
 
 const path = require("path");
+app.set("views", path.join(__dirname, "views"));
+app.use(flash());
 const { error } = require("console");
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "public")));
@@ -41,23 +45,27 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use(function(request, response, next) {
+  response.locals.messages = request.flash();
+  next();
+});
+
 passport.use(new LocalStrategy({
   usernameField: 'email',
   passwordField: 'password'
 }, (username, password, done) => {
-  User.findOne({ where: { email: username}})
-    .then(async(user) => {
-      const result = await bcrypt.compare(password, user.password)
-      if (result) {
-        return done(null, user);
-      }
-      else {
-        return done("Invalid Password");
-      }
-      
-    }).catch((error) => {
-      return (error);
-    })
+  User.findOne({ where: { email: username } })
+  .then(async function (user) {
+    const result = await bcrypt.compare(password, user.password);
+    if (result) {
+      return done(null, user);
+    } else {
+      return done(null, false, { message: "Invalid password" });
+    }
+  })
+  .catch((error) => {
+    return done(err);
+  });
 }))
 
 passport.serializeUser((user, done) => {
@@ -111,7 +119,8 @@ app.get("/todos", connectEnsureLogin.ensureLoggedIn(), async (req, res) => {
 });
 
 app.get("/signup", (request, response) => {
-  response.render("signup", { title: "Signup" , csrfToken: request.csrfToken()})
+  response.render("signup", { title: "Signup" , csrfToken: request.csrfToken()});
+  
 })
 
 app.post("/users",async (request, response) => {
@@ -141,10 +150,17 @@ app.get("/login", (request, response) => {
   response.render("login", { title: "Login", csrfToken: request.csrfToken()});
 })
 
-app.post("/session", passport.authenticate('local', { failureRedirect: "/login"}), (request,response) => {
-  console.log(request.user);
-  response.redirect("/todos");
-})
+app.post(
+  "/session",
+  passport.authenticate("local", {
+    failureRedirect: "/login",
+    failureFlash: true,
+  }),
+  function (request, response) {
+    console.log(request.user);
+    response.redirect("/todos");
+  }
+);
 
 app.get("/signout", (request, response) => {
   request.logout((err) => {
