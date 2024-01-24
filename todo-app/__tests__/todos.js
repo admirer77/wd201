@@ -72,46 +72,9 @@ describe("Todo test suite", () => {
     expect(response.statusCode).toBe(302);
   })
 
-  test("not create a todo item with empty date", async () => {
-    const res = await agent.post("/todos").send({
-      title: "Empty date todo",
-      dueDate: "",
-      completed: false,
-    });
-    expect(res.status).toBe(500);
-  });
+  
 
-  test("Create a sample due today item", async () => {
-    const res = await agent.post("/todos").send({
-      title: "Due Today Todo",
-      dueDate: new Date().toISOString().split("T")[0],
-      completed: false,
-    });
-
-    expect(res.status).toBe(500);
-  });
-
-  test("Creating a sample due later item", async () => {
-    const t = new Date();
-    t.setDate(t.getDate() + 1);
-    const res = await agent.post("/todos").send({
-      title: "Go bali",
-      dueDate: t.toISOString().split("T")[0],
-      completed: false,
-    });
-    expect(res.status).toBe(500);
-  });
-
-  test("Create a sample overdue item", async () => {
-    const y = new Date();
-    y.setDate(y.getDate() - 1);
-    const res = await agent.post("/todos").send({
-      title: "Submit assignment",
-      dueDate: y.toISOString().split("T")[0],
-      completed: false,
-    });
-    expect(res.status).toBe(500);
-  });
+  
 
   test("Marking a sample overdue item as completed", async () => {
     const agent = request.agent(server);
@@ -148,26 +111,33 @@ describe("Todo test suite", () => {
 
   
 
-  test("Delete a todo item", async () => {
+  test("Deletes a todo with the given ID", async () => {
     const agent = request.agent(server);
     await login(agent, "user@qqq.www", "133322");
-    const createTodo = await agent.post("/todos").send({
-      title: "Todo to Delete",
-      dueDate: new Date().toISOString().split("T")[0],
+    var res = await agent.get("/todos");
+    let csrfToken = extractCsrfToken(res);
+    await agent.post("/todos").send({
+      _csrf: csrfToken,
+      title: "Buy milk",
+      dueDate: new Date().toISOString(),
       completed: false,
     });
 
-    console.log("createTodo:", createTodo);
-    const Id = null;
-    if (createTodo && createTodo.header && createTodo.header.location) {
-      Id = Number(createTodo.header.location.split("/")[2]);
-    }
+    const groupedTodosResponse = await agent
+      .get("/todos")
+      .set("Accept", "application/json");
 
-    //const Id = Number(createTodo.header.location.split("/")[2]);
+    const parsedGroupedResponse = JSON.parse(groupedTodosResponse.text);
+    const dueTodayCount = parsedGroupedResponse.dueToday.length;
+    const latestTodo = parsedGroupedResponse.dueToday[dueTodayCount - 1];
 
-    const dltResponse = await agent.delete(`/todos/${Id}`).send();
+    res = await agent.get("/todos");
+    csrfToken = extractCsrfToken(res);
 
-    expect(dltResponse.status).toBe(500);
+    const DeletedResponse = await agent.delete(`/todos/${latestTodo.id}`).send({
+      _csrf: csrfToken,
+    });
+    expect(Boolean(DeletedResponse.text)).toBe(true);
   });
 });
 

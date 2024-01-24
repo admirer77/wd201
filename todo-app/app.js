@@ -217,18 +217,19 @@ app.put("/todos/:id", async function (request, response) {
   }
 });
 
-app.delete("/todos/:id", async function (request, response) {
+app.delete("/todos/:id", connectEnsureLogin.ensureLoggedIn(), async function (request, response) {
   console.log("We have to delete a Todo with ID: ", request.params.id);
 
   try {
-    await Todo.remove(request.params.id);
-    return response.json({ success: true });
+    //const deletedItem = await Todo.deleteTodo(request.params.id);
+    const deletedItem = await Todo.remove(request.params.id, request.user.id,)
+    // Check if a todo was deleted successfully
+    return response.json(deletedItem);
+
   } catch (error) {
-    return response.status(422).json(error);
+    console.error(error);
+    return response.status(422).json({ success: false, error: "Deletion error" });
   }
-  // First, we have to query our database to delete a Todo by ID.
-  // Then, we have to respond back with true/false based on whether the Todo was deleted or not.
-  // response.send(true)
 });
 
 module.exports = app;
